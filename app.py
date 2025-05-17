@@ -1,3 +1,4 @@
+from unittest import result
 import matplotlib.pyplot as plt
 import customtkinter as ctk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -12,7 +13,7 @@ ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
 janela = ctk.CTk()
 janela.title("Simulador De Investimentos")
-janela.geometry("900x700")
+janela.geometry("800x600")
 
 def calcular_investimento(inicial, aporte, taxa, meses):
     montantes = []
@@ -55,3 +56,26 @@ def simular():
             "meses_b": meses_b,
             "taxa_b": taxa_b
         })
+    #Resultado
+    resultado.configure(  # type: ignore
+        text= f"[A] Final: R$ {final_a:.2f}| Corrigido: R$ {valor_corrigido_a:.2f}\n"
+              f"[B] Final: R$ {final_b:.2f}| Corrigido: R$ {valor_corrigido_b:.2f}\n"
+    )
+    # Grafíco
+    for widget in frame_grafico.winfo_children():  # type: ignore
+        widget.destroy()
+    fig, ax = plt.subplots(figsize=(6, 3))
+    ax.plot(range(1, meses + 1), montantes_a, label="Investimento A", color="green")
+    ax.plot(range(1, meses_b + 1), montantes_b, label="Investimento B", color="blue")
+    ax.set_title("Evolução do Investimento")
+    ax.set_xlabel("Meses")
+    ax.set_ylabel("Valor (R$)")
+    ax.legend()
+    ax.grid(True)
+
+    canvas = FigureCanvasTkAgg(fig, master=frame_grafico) # type: ignore
+    canvas.draw()
+    canvas.get_tk_widget().pack()
+
+except Exception as e:
+    resultado.configure(text=f"Erro: {str(e)}") # type: ignore
