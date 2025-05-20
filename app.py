@@ -7,7 +7,7 @@ from tkinter import filedialog
 
 historico = []
 
-# Janela principal
+
 
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
@@ -15,6 +15,15 @@ janela = ctk.CTk()
 janela.title("Simulador De Investimentos")
 janela.geometry("800x600")
 
+# ENTRADAS INVESTIMENTOS A- JACKSON
+
+
+
+
+# ENTRADAS iNVESTIMENTOS B- JACKSON
+
+
+# Função de calculo do investimento
 def calcular_investimento(inicial, aporte, taxa, meses):
     montantes = []
     saldo = inicial
@@ -37,13 +46,13 @@ def simular():
     meses_b = int(entry_meses_b.get()) # type: ignore
     inflacao_b = float(entry_inflacao_b.get() or 0) / 100 # type: ignore
 
-    # Cauculo Do Investimento
+    
     montantes_a,final_a,investido_a = calcular_investimento(valor_inicial,aporte,taxa,meses)
     montantes_b,final_b,investido_b = calcular_investimento(valor_inicial_b,aporte_b,taxa_b,meses_b)
     valor_corrigido_a = final_a / ((1 + inflacao)** meses)   
     valor_corrigido_b = final_b / ((1 + inflacao)** meses)
 
-    # Criando Historico pra o Usuario ver seus ultimos investimentos
+    
     historico.append({
             "valor_final_a": final_a,
             "valor_corrigido_a": valor_corrigido_a,
@@ -56,12 +65,12 @@ def simular():
             "meses_b": meses_b,
             "taxa_b": taxa_b
         })
-    #Resultado
+    
     resultado.configure(  # type: ignore
         text= f"[A] Final: R$ {final_a:.2f}| Corrigido: R$ {valor_corrigido_a:.2f}\n"
               f"[B] Final: R$ {final_b:.2f}| Corrigido: R$ {valor_corrigido_b:.2f}\n"
     )
-    # Grafíco
+    
     for widget in frame_grafico.winfo_children():  # type: ignore
         widget.destroy()
     fig, ax = plt.subplots(figsize=(6, 3))
@@ -79,3 +88,36 @@ def simular():
 
 except Exception as e:
     resultado.configure(text=f"Erro: {str(e)}") # type: ignore
+
+def mostrar_historico(historico):
+    texto = "\n".join([
+        f"{i+1}) [A] Final: R${h['valor_final_a']:.2f} | Corrigido: R${h['valor_corrigido_a']:.2f} | Meses: {h['meses_a']}\n"
+        f"    [B] Final: R${h['valor_final_b']:.2f} | Corrigido: R${h['valor_corrigido_b']:.2f} | Meses: {h['meses_b']}"
+        for i, h in enumerate(historico[-5:])
+    ])
+
+    popup = ctk.CTkToplevel(janela)
+    popup.geometry("400x300")
+    popup.title("Histórico de Simulações")
+    label = ctk.CTkLabel(popup, text=texto, justify="left")
+    label.pack(padx=10, pady=10)
+
+def exportar_csv():
+    if not historico:
+        return
+    caminho = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV files", "*.csv")])
+    if caminho:
+        with open(caminho, mode='w' , newline='', encoding='utf-8') as f:
+            writer = csv.DictWriter(f,fieldnames=historico[0].keys())
+            writer.writeheader()
+            writer.writerows(historico)
+# Botoes - Jackson
+
+
+
+
+# GRAFICO - Jackson 
+
+
+
+# iniciar gui - Jackson
