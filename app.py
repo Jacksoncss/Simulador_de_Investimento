@@ -1,4 +1,3 @@
-from unittest import result
 import matplotlib.pyplot as plt
 import customtkinter as ctk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
